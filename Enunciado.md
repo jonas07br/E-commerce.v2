@@ -1,170 +1,167 @@
-# Testes de Software - Prof. Eiji Adachi
-
-**Trabalho**: Aplicação de Testes Funcionais e Testes Estruturais e Implementação de Testes Automatizados para Funcionalidade de Finalização de Compra em um E-commerce  
+Aqui está o **enunciado inteiro convertido para Markdown**, organizado e formatado:
 
 ---
 
-## Contexto do Trabalho
+# **Trabalho da 3ª Unidade – Testes de Mutação e Testes com Dublês (Fakes e Mocks)**
 
-Você recebeu um projeto backend de uma aplicação de e-commerce estruturada como uma **API REST**, organizada em três camadas principais:
-- **Controller**: Responsável por lidar com as requisições HTTP.
-- **Service**: Contém a lógica de negócio.
-- **Repository**: Responsável pela interação com o banco de dados.
-
-Neste trabalho, o foco será implementar **testes de unidade automatizados** para a funcionalidade de **finalizar compra**, que faz parte de um processo de checkout em um e-commerce. 
-
-Este trabalho pode ser feito em grupos de 1 a 2 membros.
-
-## Descrição da Funcionalidade de Finalização de Compra
-
-A funcionalidade de finalizar compra recebe como entradas um identificador para um **cliente** e um identificador para um **carrinho de compras**, que encapsula um conjunto de produtos selecionados pelo cliente. Ela realiza as seguintes operações:
-
-1. **Consulta ao serviço de estoque**: Verifica se há quantidade suficiente de cada produto no estoque.
-2. **Cálculo do preço total da compra**: Soma o valor total dos produtos no carrinho e aplica as regras de negócio descritas a seguir.
-3. **Consulta ao serviço de pagamentos**: Verifica se o pagamento foi autorizado.
-4. **Atualização do estoque**: Se o pagamento for autorizado, dá baixa no estoque, reduzindo a quantidade dos produtos.
-
-Seu objetivo é implementar testes que cubram a funcionalidade de **`calcularCustoTotal`** de forma isolada.
-
-## Objetivos do Trabalho
-
-**Implementar a o cálculo do preço total da compra:**
-   - Implementar o **método de cálculo do preço total da compra** na camada de serviço.  
-
-**Testar a Camada de Serviço**:  
-   - Implementar testes automatizados compatíveis com JUnit 5 para o **método de cálculo do preço total da compra** na camada de serviço.  
-   
-   - Aplicar **critérios de testes de caixa preta**:  
-     - Identificar as partições do domínio; 
-     - Identificar os valores limites do domínio;
-     - Elaborar tabela de decisão especificando as regras do domínio;
-     - Criar uma classe de teste JUnit com métodos de teste cobrindo todas as partições identificadas;
-     - Criar uma outra classe de teste JUnit com métodos de teste cobrindo todos os valores limites identificados;
-     - Criar uma outra classe de teste JUnit com métodos de teste cobrindo todas as regras identificadas na tabela de decisão;
-     - Documentar os casos de teste numa planilha ou numa tabela no README relacionando ID do teste, entrada, resultado esperado e critério coberto (partição, limite ou regra de decisão).
-   
-   - Aplicar critérios de testes **caixa branca**:
-      - **Cobertura obrigatória de arestas (branch coverage)**: atingir **100% de cobertura de arestas** no método de cálculo do custo total da compra.
-
-      - **Cobertura MC/DC (Modified Condition/Decision Coverage)**: para decisões compostas, demonstrar que cada condição individual influencia o resultado da decisão e que foi devidamente coberta por um teste. O README deve conter uma tabela “decisão × condições × casos de teste”, com marcação de T/F e o caso correspondente. Esse detalhamento deve ser feito apenas para a decisão composta mais complexa do seu código.
-
-      - **Complexidade e independência de caminhos**: No README, incluir:
-        - O **grafo de fluxo de controle (CFG)** do método;  
-        - A **complexidade ciclomática (V(G))** calculada;  
-        - O número mínimo de casos de teste independentes necessários (≥ V(G)).
-
-   - Além dos casos válidos, devem ser criados testes de validação e robustez, cobrindo entradas inválidas (ex.: quantidade ≤ 0, preços negativos, cliente nulo, etc.), com uso de `assertThrows`.
-
-   - Cada teste deve conter uma mensagem de falha descritiva (`assertThat(...).as("descrição do cenário")`) e nomes de método autoexplicativos -- ex.: `calcularCustoTotal_quandoPesoIgual10Kg_entaoAplicaFreteDe2PorKg` -- ou usar `@DisplayName`.
-  
-  ## Boas Práticas Recomendadas
-
-- Nomeie métodos de teste de forma descritiva, indicando condição e resultado esperado.  
-- Use `@BeforeEach` para inicialização de dados comuns.  
-- Prefira **AssertJ** para comparar `BigDecimal`:  
-  `assertThat(total).isEqualByComparingTo("414.00");`  
-- Evite valores mágicos: declare constantes (`DESCONTO_10 = new BigDecimal("0.10")`).  
-- Utilize **JUnit 5 Parameterized Tests** sempre que for adequado.  
-- Inclua testes de exceção com `assertThrows` e mensagens de erro verificadas. 
-
-
-## Regras para cálculo do custo da compra
-
-### Definições
-
-O **peso tributável** do item é definido como:
-
-> `peso_tributável = max(peso_físico, peso_cúbico)`
-
-onde o **peso cúbico** é calculado como:
-
-> `peso_cúbico = (C × L × A) / 6000`
-
-Os cálculos devem ser feitos com **duas casas decimais**, e o **arredondamento final** (half-up) ocorre **somente no valor total da compra**.
-
-O **peso total** da compra é a soma dos pesos tributáveis de todos os itens, já considerando as quantidades.
-
-O cliente possui um **nível de fidelidade**, que pode ser:
-- **Ouro**
-- **Prata**
-- **Bronze**
-
-O **CEP de entrega** pertence a uma **região** com um **multiplicador de frete**:
-
-| Região        | Multiplicador |
-|----------------|---------------|
-| Sudeste        | 1,00 |
-| Sul            | 1,05 |
-| Nordeste       | 1,10 |
-| Centro-Oeste   | 1,20 |
-| Norte          | 1,30 |
+**Disciplina:** Testes de Software
+**Professor:** Eiji Adachi
 
 ---
 
-### Ordem de cálculo
+## **1. Contexto**
 
-1. **Subtotal dos itens**
+Este trabalho é uma continuação direta do enunciado da 2ª unidade, no qual você testou o método `calcularCustoTotal()` de uma aplicação de e-commerce.
 
-   `Subtotal = soma(preço_unitário × quantidade)`
+Nesta etapa, você deverá:
 
-   (somente os produtos, sem considerar o frete)
+* Testar uma **versão simplificada** do cálculo do custo total.
+* Criar testes para o método `finalizarCompra()`, utilizando **fakes e mocks** para simular dependências.
 
-2. **Desconto por múltiplos itens de mesmo tipo**
-
-Se um carrinho de compras tiver diferentes `ItemCompra` com produtos de mesmo tipo (`TipoProduto`), concede-se desconto escalonado da seguinte forma: 
-- 3 a 4 itens do mesmo tipo → **5% de desconto**
-- 5 a 7 itens do mesmo tipo → **10% de desconto**
-- 8 ou mais itens do mesmo tipo → **15% de desconto**
-
-O desconto é aplicado apenas ao subtotal dos itens dessa categoria.
-
-3. **Desconto por valor de carrinho**
-
-   - Se `Subtotal > R$ 1000,00` → **20% de desconto**
-   - Senão, se `Subtotal > R$ 500,00` → **10% de desconto**
-   - Caso contrário → **sem desconto**
-
-Pode acumular com o **desconto por múltiplos itens de mesmo tipo**. Neste caso, o desconto por tipo é aplicado **antes** do desconto por valor de carrinho.
-
-4. **Cálculo do frete base (por peso total)**
-
-   - **Faixas de peso (kg):**
-
-     | Faixa | Condição | Valor por kg |
-     |--------|-----------|---------------|
-     | A | 0,00 ≤ peso ≤ 5,00 | **Isento (R$ 0,00)** |
-     | B | 5,00 < peso ≤ 10,00 | **R$ 2,00/kg** |
-     | C | 10,00 < peso ≤ 50,00 | **R$ 4,00/kg** |
-     | D | peso > 50,00 | **R$ 7,00/kg** |
-
-   - Se a faixa não for isenta, **some uma taxa mínima de R$ 12,00** ao valor do frete.
-   - Para cada item **marcado como frágil**, some **R$ 5,00 × quantidade** (taxa de manuseio especial).
-   - Após somar todos os encargos, **multiplique pelo fator da região** definido anteriormente.
-
-5. **Benefício de nível do cliente (só sobre o frete)**
-
-   - **Ouro:** 100% de desconto no frete (frete final = R$ 0,00)
-   - **Prata:** 50% de desconto sobre o frete calculado
-   - **Bronze:** paga o frete integral
-
-   > Mesmo para clientes Ouro, o frete deve ser calculado conforme as regras anteriores, mas o valor final é zerado após o cálculo.
-
-6. **Total da compra**
-
-   `Total = (Subtotal com desconto) + (Frete após desconto de nível)`
-
-   O resultado final deve ser **arredondado para duas casas decimais**.
+O trabalho pode ser realizado individualmente ou em dupla.
 
 ---
 
-## Critérios de Avaliação
+## **2. Método Simplificado `calcularCustoTotal()`**
 
-1. **Correção dos Testes**: Verificar se os testes cobrem adequadamente os diferentes cenários e se validam corretamente o comportamento esperado da aplicação.
-2. **Cobertura dos Critérios de Teste**: Avaliar se os critérios de testes funcionais e estruturais foram adequadamente aplicados e se atendem o enunciado.
-3. **Organização e Boas Práticas**: Avaliar a organização do código dos testes, seguindo boas práticas de nomenclatura, estrutura de testes e clareza.
+Você deverá implementar novamente o método de cálculo de custo total, agora numa versão reduzida seguindo as regras abaixo.
 
-## Entrega
+---
 
-Você deverá entregar esta atividade como um projeto Maven nomeado com os nomes dos membros seguindo o padrão nome1-nome2 (ex.: JoaoSilva-JoseSouza). Lembre-se de também alterar o nome do projeto, usando o mesmo padrão de nome, no atributo `artifactId` do arquivo `pom.xml`. Este projeto deverá ser compactado em formato .zip e entregue via SIGAA.
+### **2.1 Regra de Desconto**
 
-É obrigatório um arquivo do tipo README.md descrevendo como executar o projeto, como executar os testes e como verificar a cobertura dos testes. Também é obrigatório o projeto conter um documento (pode ser uma planilha a parte do README) com todo o projeto dos casos de testes (partições, limites, tabela de decisão, MC/DC, etc).
+* Se **valor total ≥ R$ 1000,00** → aplicar **20% de desconto**
+* Se **valor total ≥ R$ 500,00 e < R$ 1000,00** → aplicar **10% de desconto**
+* Outros valores → **sem desconto**
+
+---
+
+### **2.2 Regra de Frete**
+
+O frete deve ser calculado com base apenas no **peso físico total**, seguindo a tabela:
+
+| Faixa | Peso total      | Valor do frete      |
+| ----- | --------------- | ------------------- |
+| A     | 0–5 kg          | Frete isento (R$ 0) |
+| B     | >5 kg e ≤10 kg  | R$ 2,00 por kg      |
+| C     | >10 kg e ≤50 kg | R$ 4,00 por kg      |
+| D     | >50 kg          | R$ 7,00 por kg      |
+
+**Observações importantes:**
+
+* Produtos **frágeis**: adicionar **R$ 5,00 por unidade frágil**.
+* Não há adicional por região.
+* Não há desconto por fidelidade (Ouro/Prata/Bronze).
+
+---
+
+### **2.3 Ordem de Cálculo**
+
+1. **Subtotal** = soma de (preço unitário × quantidade).
+2. Aplicar o **desconto**.
+3. Calcular o **frete**.
+4. **Total** = subtotalComDesconto + frete.
+5. O valor final deve ser **arredondado para duas casas decimais**.
+
+---
+
+## **3. Testes Obrigatórios para `calcularCustoTotal()`**
+
+### **3.1 Cobertura Estrutural**
+
+Obrigatório atingir:
+
+* **100% de cobertura de arestas (branch coverage)**
+* O relatório do **JaCoCo** deve comprovar que **todas as arestas foram cobertas**.
+
+---
+
+### **3.2 Mutação**
+
+Obrigatório:
+
+* Utilizar **PITEST** para análise de mutação.
+* Atingir **100% de mutantes mortos** no método.
+
+O README deve documentar:
+
+* Linha de comando utilizada.
+* Como verificar que não restaram mutantes sobreviventes.
+* Estratégias usadas para matar mutantes sobreviventes.
+
+---
+
+## **4. Testes do Método `finalizarCompra()`**
+
+Além dos testes estruturais, criar testes que simulem todo o comportamento usando dublês adequados.
+
+### **4.1 Objetivo do Teste**
+
+O teste deve cobrir todo o fluxo:
+
+1. Verificação de estoque via serviço externo.
+2. Cálculo do custo total.
+3. Autorização de pagamento.
+4. Atualização do estoque e finalização da compra.
+
+Os testes devem garantir:
+
+* **100% de cobertura de decisão** do método.
+* Verificação de chamadas esperadas (**métodos invocados**).
+* Resultado retornado de acordo com a especificação.
+
+---
+
+### **4.2 Cenários de Teste**
+
+Você deve criar **dois cenários**, cada um em um arquivo `.java` distinto.
+
+---
+
+#### **Cenário 1**
+
+* Criar **fakes** para simular:
+
+    * `IEstoqueExternal`
+    * `IPagamentoExternal`
+* As demais dependências devem ser simuladas usando **mocks com Mockito**.
+
+---
+
+#### **Cenário 2**
+
+* Criar **mocks** para:
+
+    * `IEstoqueExternal`
+    * `IPagamentoExternal`
+* Usar **fakes** para simular as dependências da camada **repository**.
+
+---
+
+## **5. Entrega**
+
+A entrega deve conter:
+
+* Projeto Maven em **formato ZIP**
+
+* Nome do projeto e `artifactId` no formato:
+  **nome1-nome2**
+
+* Arquivo **README.md** contendo:
+
+    * Nome dos autores
+    * Instruções de execução
+    * Como rodar os testes
+    * Como visualizar relatórios de cobertura
+    * Como gerar e interpretar o relatório de mutação
+
+---
+
+Se quiser, posso gerar também:
+
+✔️ Um **README.md completo e pronto para uso**
+✔️ Templates dos testes unitários
+✔️ Estrutura de projeto Maven
+✔️ Implementação base das classes e interfaces
+
+É só pedir!
