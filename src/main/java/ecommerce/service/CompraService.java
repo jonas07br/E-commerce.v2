@@ -83,9 +83,8 @@ public class CompraService
 	{
         BigDecimal totalCarrinho = calcularTotalCarrinho(carrinho);
         BigDecimal totalFrete = calcularFrete(carrinho);
-        BigDecimal custoTotal = totalCarrinho.add(totalFrete);
 
-		return totalCarrinho.add(custoTotal);
+        return totalCarrinho.add(totalFrete).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 	}
 
@@ -113,7 +112,7 @@ public class CompraService
         if(pesoTotal.compareTo(BigDecimal.ZERO) <= 0){
             throw  new RuntimeException();
         }else if(pesoTotal.compareTo(BigDecimal.valueOf(5))<=0){
-            multiplicadorPeso = BigDecimal.valueOf(1);
+            multiplicadorPeso = BigDecimal.valueOf(0);
         }else if(pesoTotal.compareTo(BigDecimal.valueOf(5))>0 && pesoTotal.compareTo(BigDecimal.valueOf(10))<=0){
             multiplicadorPeso = BigDecimal.valueOf(2);
         }else if(pesoTotal.compareTo(BigDecimal.valueOf(10))>0 && pesoTotal.compareTo(BigDecimal.valueOf(50))<=0){
@@ -121,7 +120,6 @@ public class CompraService
         }else{
             multiplicadorPeso = BigDecimal.valueOf(7);
         }
-
         BigDecimal freteTotal = pesoTotal.multiply(multiplicadorPeso).add(adicionalProdutosFrageis);
         return freteTotal;
     }
@@ -134,8 +132,10 @@ public class CompraService
             descontoBase = BigDecimal.valueOf(20);
         }else if(totalBruto.compareTo(BigDecimal.valueOf(500))>=0 && totalBruto.compareTo(BigDecimal.valueOf(1000))<0){
             descontoBase = BigDecimal.valueOf(10);
-        }else{
+        }else if(totalBruto.compareTo(BigDecimal.valueOf(500))<0 && totalBruto.compareTo(BigDecimal.valueOf(0))>=0){
             descontoBase = BigDecimal.valueOf(0);
+        }else{
+            throw new RuntimeException();
         }
 
         BigDecimal descontoTotal = descontoBase.divide(BigDecimal.valueOf(100),2,BigDecimal.ROUND_HALF_UP).multiply(totalBruto);
