@@ -156,12 +156,3 @@ A entrega deve conter:
     * Como gerar e interpretar o relatório de mutação
 
 ---
-
-Se quiser, posso gerar também:
-
-✔️ Um **README.md completo e pronto para uso**
-✔️ Templates dos testes unitários
-✔️ Estrutura de projeto Maven
-✔️ Implementação base das classes e interfaces
-
-É só pedir!
