@@ -113,9 +113,9 @@ public class CompraService
             throw  new RuntimeException();
         }else if(pesoTotal.compareTo(BigDecimal.valueOf(5))<=0){
             multiplicadorPeso = BigDecimal.valueOf(0);
-        }else if(pesoTotal.compareTo(BigDecimal.valueOf(5))>0 && pesoTotal.compareTo(BigDecimal.valueOf(10))<=0){
+        }else if(pesoTotal.compareTo(BigDecimal.valueOf(10))<=0){
             multiplicadorPeso = BigDecimal.valueOf(2);
-        }else if(pesoTotal.compareTo(BigDecimal.valueOf(10))>0 && pesoTotal.compareTo(BigDecimal.valueOf(50))<=0){
+        }else if(pesoTotal.compareTo(BigDecimal.valueOf(50))<=0){
             multiplicadorPeso = BigDecimal.valueOf(4);
         }else{
             multiplicadorPeso = BigDecimal.valueOf(7);
@@ -130,9 +130,9 @@ public class CompraService
         BigDecimal descontoBase;
         if(totalBruto.compareTo(BigDecimal.valueOf(1000))>=0){
             descontoBase = BigDecimal.valueOf(20);
-        }else if(totalBruto.compareTo(BigDecimal.valueOf(500))>=0 && totalBruto.compareTo(BigDecimal.valueOf(1000))<0){
+        }else if(totalBruto.compareTo(BigDecimal.valueOf(500))>=0){
             descontoBase = BigDecimal.valueOf(10);
-        }else if(totalBruto.compareTo(BigDecimal.valueOf(500))<0 && totalBruto.compareTo(BigDecimal.valueOf(0))>=0){
+        }else if(totalBruto.compareTo(BigDecimal.valueOf(0))>=0){
             descontoBase = BigDecimal.valueOf(0);
         }else{
             throw new RuntimeException();
