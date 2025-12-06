@@ -84,6 +84,12 @@
 			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.22.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -93,7 +99,26 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.22.0</version> <configuration>
+                <targetClasses>
+                    <param>ecommerce.service.CompraService</param>
+                </targetClasses>
+                <targetTests>
+                    <param>ecommerce.service.*Test</param>
+                </targetTests>
+            </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.1</version> </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.12</version>
