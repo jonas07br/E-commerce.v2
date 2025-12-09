@@ -2,7 +2,7 @@
 
 **Disciplina:** Testes de Software  
 **Professor:** Eiji Adachi  
-**Autores:** [Jonas Rafael Silva Cavalcanti e Matheus Gabriel Souto de Lira Freitas]
+**Autores:** Jonas Rafael Silva Cavalcanti e Matheus Gabriel Souto de Lira Freitas
 
 ---
 
